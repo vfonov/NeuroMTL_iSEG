@@ -1,7 +1,7 @@
-#! /bin/sh
+#! /bin/bash
 ################################ MNI Header ##################################-
-## @NAME       :  iSEG_sanity_check.sh
-## @DESCRIPTION:  Apply pre-trained model to files that were used for training (for sanity check)
+## @NAME       :  convert_iSEG_to_minc.sh
+## @DESCRIPTION:  convert iSEG files to minc
 ## @COPYRIGHT  :
 ##               Copyright 2017 Vladimir Fonov, McConnell Brain Imaging Centre, 
 ##               Montreal Neurological Institute, McGill University.
@@ -21,16 +21,12 @@
 ##             
 ########################################################################
 
+#1. convert all files to minc
 
-echo "SUBJ,CSF,GM,WM" > iSEG/check.csv
+for j in {testing,training}/*-T{1,2}.hdr;do
+ nii2mnc -float $j ${j/.hdr/.mnc}
+done
 
-for i in iSEG/iSEG_training/subject-*-T1.mnc;do
-  ref=${i/-T1/-cls}
-  out=iSEG/check/$(basename $i |sed -e 's/-T1/-cls/')
-
-  if [ ! -e $out ];then
-  th manual_apply_fcn_iSEG.lua -t1 $i -t2 ${i/T1/T2} -gpu -model iseg_train/v2_final_1_fold_training.t7 -out $out
-  fi
-
-  echo $(basename $i -T1.mnc),$(volume_similarity  --kappa $ref $out |cut -d , -f 2|tr '\n' ','|cut -d , -f 1,2,3) >> iSEG/check.csv
+for j in training/*-label.hdr;do
+ nii2mnc -byte $j ${j/.hdr/.mnc}
 done

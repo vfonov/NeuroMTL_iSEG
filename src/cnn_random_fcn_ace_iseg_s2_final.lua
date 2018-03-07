@@ -51,7 +51,7 @@ local work='temp_iseg_priors/'
 
 
 local training_list="iSEG_sym_train_list.lst"
-local training_prefix="iSEG/"
+local training_prefix="data/"
 
 local classes=4
 

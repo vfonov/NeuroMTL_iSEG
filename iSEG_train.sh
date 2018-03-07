@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 ################################ MNI Header ##################################-
 ## @NAME       :  iSEG_segment.sh
 ## @DESCRIPTION:  Apply pre-trained model to all iSEG files
@@ -21,6 +21,12 @@
 ##             
 ########################################################################
 
-for i in iSEG/iSEG_testing/subject-*-T1.mnc;do 
-th manual_apply_fcn_iSEG.lua -t1 $i -t2 ${i/T1/T2} -gpu -model iseg_train/v2_final_1_fold_training.t7 -out iSEG/iSEG_testing/$(basename $i |sed -e 's/-T1/-cls/')
-done 
+
+# pre-train using ACE-IBIS dataset first
+th src/cnn_random_fcn_ace_iseg.lua
+
+# run cross-validation experiment using iSEG training data
+th src/cnn_random_fcn_ace_iseg_s2.lua
+
+# train the final model, using all available iSEG training data
+th src/cnn_random_fcn_ace_iseg_s2_final.lua
