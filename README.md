@@ -17,6 +17,11 @@ See at http://iseg2017.web.unc.edu/rules/results/
 * in `data` directory run `postprocess.sh` to convert from minc to submission data format (Analyze)
 
 
+## Memory requirements:
+* Training : parameters are optimized for TitanXp with 12Gb of NVRAM
+* Testing : segmentation on GPU uses 2130Mb 
+
+
 ## Copyright
 GNU-v3, see LICENSE file
 
